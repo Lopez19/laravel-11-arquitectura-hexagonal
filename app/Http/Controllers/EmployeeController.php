@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Src\Employee\Application\UseCases\UpdateSalaryUseCase;
 
 final class EmployeeController extends Controller
 {
@@ -20,6 +21,12 @@ final class EmployeeController extends Controller
 
         // Update the salary of each employee
         foreach ($employees as $employee) {
+            $useCase = new UpdateSalaryUseCase();
+            $useCase->execute(
+                $employee['id'],
+                $employee['hoursWorked']
+            );
+
             // Find the employee
             $employeeFound = Employee::find($employee['id']);
             if ($employeeFound) {
