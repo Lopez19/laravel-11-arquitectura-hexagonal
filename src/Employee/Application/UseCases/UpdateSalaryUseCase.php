@@ -37,11 +37,6 @@ final class UpdateSalaryUseCase
     {
         $employeeEntity = $this->finder->execute($id);
         $employeeEntity->calculateSalary(new Hours($hoursWorked));
-
-        // $employee = new EmployeeEntity(
-        //     new EmployeeId($id),
-        //     new Hours($hoursWorked)
-        // );
-
+        $this->repository->save($employeeEntity);
     }
 }

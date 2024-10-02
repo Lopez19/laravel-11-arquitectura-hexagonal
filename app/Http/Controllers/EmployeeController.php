@@ -27,15 +27,6 @@ final class EmployeeController extends Controller
                 $employee['id'],
                 $employee['hoursWorked']
             );
-
-            // Find the employee
-            $employeeFound = Employee::find($employee['id']);
-            if ($employeeFound) {
-                // Calculate the salary
-                $employeeFound->salary = $employeeFound->pricePerHour * $employee['hoursWorked'];
-                // Save the employee
-                $employeeFound->save();
-            }
         }
 
         // Return a success message

@@ -32,4 +32,10 @@ final class EloquentEmployeeRepository implements EmployeeRepository
             new Hours($employee->hoursWorked),
         );
     }
+
+    public function save(EmployeeEntity $employeeEntity): void
+    {
+        $this->model->fill($employeeEntity->toArray());
+        $this->model->save();
+    }
 }

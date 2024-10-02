@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Employee;
 use Illuminate\Console\Command;
+use Src\Employee\Application\UseCases\UpdateSalaryUseCase;
+use Src\Employee\Infrastructure\Repositories\InFileEmployeeRepository;
 
 class ImportEmployee extends Command
 {
@@ -33,14 +35,11 @@ class ImportEmployee extends Command
 
         // Import the employees
         foreach ($employees as $employee) {
-            // Find the employee
-            $employeeFound = Employee::find($employee['id']);
-            if ($employeeFound) {
-                // Calculate the salary
-                $employeeFound->salary = $employeeFound->pricePerHour * $employee['hoursWorked'];
-                // Save the in bew file
-                $this->saveDataToCsv($employeeFound->toArray());
-            }
+            $useCase = new UpdateSalaryUseCase(new InFileEmployeeRepository());
+            $useCase->execute(
+                $employee['id'],
+                $employee['hoursWorked']
+            );
         }
 
         // Show finalization message
@@ -53,29 +52,14 @@ class ImportEmployee extends Command
      * @param string $filename
      * @return array
      */
-    private function readCsv(string $filename): array
+    private function readCsv(string $filename, string $delimiter = ","): array
     {
         $data = [];
         $file = fopen($filename, 'r');
-        while (($row = fgetcsv($file)) !== false) {
-            $data[] = [
-                'id' => $row[0],
-                'hoursWorked' => $row[1],
-            ];
+        while (($row = fgetcsv($file, 1000, $delimiter)) !== false) {
+            $data[] = $row;
         }
         fclose($file);
         return $data;
-    }
-
-    /**
-     * Save the data to a CSV file.
-     *
-     * @param array $data
-     */
-    private function saveDataToCsv(array $data): void
-    {
-        $file = fopen('newfile.csv', 'a');
-        fputcsv($file, $data);
-        fclose($file);
     }
 }

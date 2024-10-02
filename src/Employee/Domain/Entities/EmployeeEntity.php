@@ -35,8 +35,21 @@ final class EmployeeEntity
         $this->hoursWorked = $hoursWorked;
     }
 
+    /**
+     * Calculate the salary of the employee
+     */
     public function calculateSalary(Hours $hoursWorked): void
     {
         $this->salary = $this->pricePerHour * $hoursWorked->getHours();
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->getId(),
+            'hoursWorked' => $this->hoursWorked->getHours(),
+            'salary' => $this->salary,
+            'pricePerHour' => $this->pricePerHour,
+        ];
     }
 }

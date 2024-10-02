@@ -8,4 +8,5 @@ use Src\Employee\Domain\Entities\EmployeeEntity;
 interface EmployeeRepository
 {
     public function search(EmployeeId $employeeId): ?EmployeeEntity;
+    public function save(EmployeeEntity $employeeEntity): void;
 }
