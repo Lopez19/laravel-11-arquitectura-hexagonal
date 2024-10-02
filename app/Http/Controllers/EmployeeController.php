@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Src\Employee\Application\UseCases\UpdateSalaryUseCase;
+use Src\Employee\Infrastructure\Repositories\EloquentEmployeeRepository;
 
 final class EmployeeController extends Controller
 {
@@ -21,7 +22,7 @@ final class EmployeeController extends Controller
 
         // Update the salary of each employee
         foreach ($employees as $employee) {
-            $useCase = new UpdateSalaryUseCase();
+            $useCase = new UpdateSalaryUseCase(new EloquentEmployeeRepository());
             $useCase->execute(
                 $employee['id'],
                 $employee['hoursWorked']

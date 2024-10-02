@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Src\Employee\Application\UseCases;
 
-use App\Employee\Domain\ValueObjects\EmployeeId;
 use App\Employee\Domain\ValueObjects\Hours;
-use Src\Employee\Domain\Entities\EmployeeEntity;
+use Src\Employee\Domain\Contracts\EmployeeRepository;
 
 final class UpdateSalaryUseCase
 {
@@ -17,11 +16,18 @@ final class UpdateSalaryUseCase
     private $finder;
 
     /**
+     * @var EmployeeRepository
+     */
+    private $repository;
+
+    /**
      * Constructor to inject dependencies
      */
-    public function __construct()
-    {
-        $this->finder = new SearchEmployeeUseCase();
+    public function __construct(
+        EmployeeRepository $repository
+    ) {
+        $this->repository = $repository;
+        $this->finder = new SearchEmployeeUseCase($this->repository);
     }
 
     /**
@@ -29,11 +35,13 @@ final class UpdateSalaryUseCase
      */
     public function execute(int $id, int $hoursWorked)
     {
-        $this->finder->execute($id);
+        $employeeEntity = $this->finder->execute($id);
+        $employeeEntity->calculateSalary(new Hours($hoursWorked));
 
-        $employee = new EmployeeEntity(
-            new EmployeeId($id),
-            new Hours($hoursWorked)
-        );
+        // $employee = new EmployeeEntity(
+        //     new EmployeeId($id),
+        //     new Hours($hoursWorked)
+        // );
+
     }
 }

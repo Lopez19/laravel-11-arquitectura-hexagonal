@@ -19,9 +19,24 @@ final class EmployeeEntity
      */
     private Hours $hoursWorked;
 
+    /**
+     * @var float
+     */
+    private float $salary;
+
+    /**
+     * @var float
+     */
+    private float $pricePerHour = 10.0;
+
     public function __construct(EmployeeId $id, Hours $hoursWorked)
     {
         $this->id = $id;
         $this->hoursWorked = $hoursWorked;
+    }
+
+    public function calculateSalary(Hours $hoursWorked): void
+    {
+        $this->salary = $this->pricePerHour * $hoursWorked->getHours();
     }
 }
